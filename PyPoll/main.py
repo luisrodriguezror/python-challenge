@@ -4,7 +4,7 @@ import csv
 csvpath = os.path.join('PyPoll','Resources', 'election_data.csv')
 
 numbervotes=0
-candidates = {}
+candidates = []
 winner= ""
 
 
@@ -12,20 +12,29 @@ winner= ""
 with open(csvpath) as csvfile:
     csvreader=csv.reader(csvfile,delimiter=",")
     next(csvreader)
+
+
     for row in csvreader:
         numbervotes+=1
         names = row[2]
-    if names in candidates:
-        candidates[names] += 1
-    else:
-        candidates[names] = 1
+
+        if names in candidates:
+            continue
+        else:
+            candidates.append(names)
 
 
-for candidate in candidates:
-    print(candidate)
+print(candidates)
+
+
 
 print(f'''Election Results
 ---------------------------------
 Total Votes: {numbervotes}
 ---------------------------------''')
+for candidate in candidates:
+    candidate_votes = sum(1 for row in csv.reader(open(csvpath)) if row[2] == candidate)
+    percentage = (candidate_votes / numbervotes) * 100
+    print(f"{candidate}: {percentage:.3f}% ({candidate_votes})")
+
 ##
